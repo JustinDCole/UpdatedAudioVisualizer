@@ -1,0 +1,46 @@
+body {
+background-color: linear-gradient(180deg, white, silver)
+}
+
+@media screen and (orientation: landscape) {
+canvas {
+position: absolute;
+height: 0;
+width: 100%;
+height: 100%;
+z-index: -1;
+}
+}
+
+@media screen and (min-width: 320em) and (max-width: 414em), (min-height: 667em) and (max-height: 869em) {
+canvas {
+position: absolute;
+width: 30%;
+height: 40%;
+}
+}
+
+@media screen and (min-width: 360em) and (min-height: 640em) and (max-height: 740em) {
+canvas {
+position: absolute;
+width: 40%;
+height: 55%;
+    }
+}
+
+@media screen and (min-width: 360em) and (max-width: 480em), (min-height: 740em) and (max-height: 869em) {
+    canvas {
+    position: absolute;
+    width: 65%;
+    height: 80%;
+        }
+    }
+
+    @media screen and (width: 768em) and  (height: 1028em)  {
+        canvas {
+        position: absolute;
+        width: 65%;
+        height: 80%;
+            }
+        }
+
