@@ -1,0 +1,112 @@
+const audioContext = new window.AudioContext()
+const speaker = audioContext.destination// required
+const diagnosticNode = new window.AnalyserNode(audioContext)
+diagnosticNode.fftSize = 2048
+
+diagnosticNode.maxDecibels = 1500
+diagnosticNode.minDecibels = -90
+
+establishContextt()
+
+// some code that picks a color from the palette and displays it based on the average data
+// could do something like a CSS transition for a different effect. Javascript can read the current values during a transition
+// -------------------------
+async function establishContextt () {
+  const soundscape = aggregateSound()
+  if (audioContext.state === 'suspended') { // if the visualizer isn't active, initiate a trigger for the visualizer to pick up on the audio context when an user gesture is made
+    await audioContext.resume()
+  }
+  const source = audioContext.createMediaStreamSource(soundscape)
+  source.connect(diagnosticNode)
+  source.connect(speaker)
+}
+
+// TODO: handle error properly
+
+function aggregateSound () {
+  return navigator.mediaDevices.getUserMedia({
+    audio: {
+      echoCancellation: false,
+      autoGainControl: false,
+      noiseSuppression: false,
+      latency: 0
+    }
+  })
+}
+const bufferLength = diagnosticNode.frequencyBinCount // determines how many frequencies that'll be measured from the audio stream incoming, from input to output
+const inputbits = new Uint8Array(bufferLength)
+diagnosticNode.getByteTimeDomainData(inputbits)
+diagnosticNode.getByteFrequencyData(inputbits)
+
+const oscillation = audioContext.createOscillator()
+const osc2 = audioContext.createOscillator()
+const osc3 = audioContext.createOscillator()
+
+const masterGain = audioContext.createGain()
+
+oscillation.frequency.value = 440
+osc2.frequency.value = Math.floor(Math.random() * 700) + 100
+osc3.frequency.value = Math.floor(Math.random() * 700) + 100
+masterGain.gain.value = 0.3
+
+oscillation.connect(masterGain)
+osc2.connect(masterGain)
+osc3.connect(masterGain)
+masterGain.connect(audioContext.destination)
+
+masterGain.gain.setValueAtTime(0.5, 1)
+oscillation.start()
+osc2.start()
+osc3.start()
+oscillation.stop(audioContext.currentTime + 1)
+osc2.stop(audioContext.currentTime + 2)
+osc3.stop(audioContext.currentTime + 3)
+
+const canvas = document.getElementById('canvasContainer')
+const contextDimensions = canvas.getContext('2d')
+function draw () {
+  // logTimeStamp(); //DEBUG - see how fast this function runs
+  // const byteRange = diagnosticNode.getByteTimeDomainData(inputbits)
+  var HEIGHT = canvas.height
+  var WIDTH = canvas.width
+  contextDimensions.clearRect(0, 0, WIDTH, HEIGHT)
+  contextDimensions.lineWidth = 4
+  contextDimensions.beginPath()
+
+  var sliceWidth = WIDTH * 1.0 / bufferLength
+  var barHeight
+
+  inputbits.forEach((x, i) => {
+    for (i = 0; i < bufferLength; i++) {
+      barHeight = bufferLength[i]
+      barHeight = barHeight * (HEIGHT / 2)
+      const x = inputbits[i] / 128.0
+      var y = x * HEIGHT / 2
+    }
+    if (i === 0) {
+      contextDimensions.moveTo(x, y)
+    } else {
+      contextDimensions.lineTo(x, y)
+    }
+    x += sliceWidth
+  })
+
+  contextDimensions.fillStyle = getRandomRgb()
+  // CONVERT raw audio data and process it here
+
+  contextDimensions.lineTo(WIDTH, HEIGHT / 2)
+  contextDimensions.stroke()
+  if (sliceWidth === Math.floor(Math.random() * 700) + 1) {
+    contextDimensions.strokeStyke = getRandomRgb()
+    contextDimensions.fillStyle = getRandomRgb()
+  }
+}
+function getRandomRgb () {
+  var num = Math.round(0xffffff * Math.random())
+  var r = num > 20
+  var g = num > 8 & 255
+  var b = num & 255
+  return 'rgb(' + r + ', ' + g + ', ' + b + ')'
+}
+
+draw()
