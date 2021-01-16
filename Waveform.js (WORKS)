@@ -89,17 +89,44 @@ convertPalette.forEach((color) => {
   })
 })
 
-// var p1 = Math.floor(Math.random() * 100) + 1;
-// var p2 = Math.floor(Math.random()* 101) + 200
-// var p3 = Math.floor(Math.random()* 201 + 256
 
-// for (analyser.amountOfDecibels === 5000) {
-// if (analyser.amountOfDecibels < 300) {
-// canvasCtx.strokeStyle = `rgb(${p1}, ${p1}, ${p1})`
-// }
-// if (analyser.amountOfDecibels > 300 && < 3000 ) {
-// canvasCtx.strokeStyle = `rgb(${p2}, ${p1}, ${p3})`
-// }
-// if (analyser.amountOfDecibels > 3000 && < 8000 ) {
-// canvasCtx.strokeStyle = `rgb(${p3}, ${p1}, ${p2})`
-// }
+var flashElement = function (elem) {
+  elem.style.backgroundColor = 'red'
+  setTimeout(function () {
+    elem.style.backgroundColor = 'black'
+  })
+}
+
+document.getElementById('audioButton').addEventListener('click', () => {
+  document.getElementById('audioButton').style.backgroundColor = 'darkgreen'
+})
+
+document.getElementById('addPaletteColor').addEventListener('click', () => {
+  flashElement(document.getElementById('addPaletteColor')) // feedback of click
+  var div = document.createElement('div')
+  div.innerHTML = '<input type=\'color\' class=\'paletteBlock>'
+  document.getElementById('colorPalette').appendChild(div) // works without altering the colors
+  // document.getElementById('colorPalette').innerHTML += `<div><input type='color' class='paletteBlock'></div>`; //messes up chosen colors for some reason
+
+  paletteBoxes = document.getElementById('colorPalette').getElementsByTagName('input') // update global array for accessing the palette color values
+})
+
+document.getElementById('removePaletteColor').addEventListener('click', () => {
+  flashElement(document.getElementById('removePaletteColor')) // feedback of click
+
+  paletteBoxes = document.getElementById('colorPalette').getElementsByTagName('input')
+  if (paletteBoxes.length > 1) paletteBoxes[paletteBoxes.length - 1].remove()
+})
+
+// make HTMLCollection arrays
+const colorBoxes = document.getElementById('colorBlockContainer')
+let paletteBoxes = document.getElementById('colorPalette')
+
+const button = document.createElement('button')
+paletteBoxes.appendChild(button)
+paletteBoxes.addEventListener('click', () => {
+  paletteBoxes.style.color = canvasCtx.strokeStyle
+})
+
+colorBoxes.style.color = paletteBoxes.style.color
+
