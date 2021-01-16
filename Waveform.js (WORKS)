@@ -99,34 +99,31 @@ var flashElement = function (elem) {
 
 document.getElementById('audioButton').addEventListener('click', () => {
   document.getElementById('audioButton').style.backgroundColor = 'darkgreen'
+  audioCtx.close()
 })
 
 document.getElementById('addPaletteColor').addEventListener('click', () => {
   flashElement(document.getElementById('addPaletteColor')) // feedback of click
   var div = document.createElement('div')
-  div.innerHTML = '<input type=\'color\' class=\'paletteBlock>'
+  div.innerHTML = '<input type=\'color\' class=\'paletteBlock\'>'
   document.getElementById('colorPalette').appendChild(div) // works without altering the colors
   // document.getElementById('colorPalette').innerHTML += `<div><input type='color' class='paletteBlock'></div>`; //messes up chosen colors for some reason
-
-  paletteBoxes = document.getElementById('colorPalette').getElementsByTagName('input') // update global array for accessing the palette color values
 })
 
 document.getElementById('removePaletteColor').addEventListener('click', () => {
   flashElement(document.getElementById('removePaletteColor')) // feedback of click
 
-  paletteBoxes = document.getElementById('colorPalette').getElementsByTagName('input')
+  const paletteBoxes = document.getElementById('colorPalette').getElementsByTagName('input')
   if (paletteBoxes.length > 1) paletteBoxes[paletteBoxes.length - 1].remove()
 })
 
 // make HTMLCollection arrays
 const colorBoxes = document.getElementById('colorBlockContainer')
-let paletteBoxes = document.getElementById('colorPalette')
+colorBoxes.getElementsByTagName('style')
 
 const button = document.createElement('button')
-paletteBoxes.appendChild(button)
-paletteBoxes.addEventListener('click', () => {
-  paletteBoxes.style.color = canvasCtx.strokeStyle
+colorBoxes.appendChild(button)
+colorBoxes.addEventListener('mouseover', () => {
+  colorBoxes.style.color = canvasCtx.strokeStyle
 })
-
-colorBoxes.style.color = paletteBoxes.style.color
 
