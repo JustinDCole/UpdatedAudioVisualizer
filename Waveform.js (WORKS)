@@ -1,0 +1,105 @@
+
+var audioCtx = new window.AudioContext()
+const dimension = audioCtx.destination
+var analyser = audioCtx.createAnalyser()
+const canvas = document.getElementById('canvasContainer')
+const canvasCtx = canvas.getContext('2d')
+
+analyser.fftSize = 2048
+const bufferLength = analyser.frequencyBinCount
+const dataArray = new Uint8Array(bufferLength)
+
+// draw an oscilloscope of the current audio source
+async function activeSound () {
+  const audiopacket = await aggregateSound()
+  if (audioCtx.state === 'suspended') { // if the visualizer isn't active, initiate a trigger for the visualizer to pick up on the audio context when an user gesture is made
+    await audioCtx.resume()
+  }
+  const microphone = audioCtx.createMediaStreamSource(audiopacket)
+  microphone.connect(analyser)
+  microphone.connect(dimension) // required
+}
+
+activeSound()
+aggregateSound()
+
+function aggregateSound () {
+  return navigator.mediaDevices.getUserMedia({
+    audio: {
+      echoCancellation: true,
+      autoGainControl: false,
+      noiseSuppression: false,
+      latency: 0
+    }
+  })
+}
+
+function draw () {
+  window.requestAnimationFrame(draw)
+
+  analyser.getByteTimeDomainData(dataArray)
+
+  analyser.maxDecibels = 8000
+
+  const WIDTH = canvas.width
+  const HEIGHT = canvas.height
+  const lineWidth = WIDTH / bufferLength
+
+  canvasCtx.fillStyle = 'rgb(50, 50, 0)'
+  canvasCtx.clearRect(0, 0, WIDTH, HEIGHT)
+  canvasCtx.beginPath()
+
+  var sliceWidth = WIDTH / bufferLength
+  var x = 0
+
+  for (var i = 0; i < bufferLength; i++) {
+    var v = dataArray[i] / 128.0
+    var y = v * HEIGHT / 2
+
+    if (i === 0) {
+      canvasCtx.moveTo(x, y)
+    } else {
+      canvasCtx.lineTo(x, y)
+    }
+    canvasCtx.fillRect(x, (HEIGHT / 2), lineWidth, y)
+    x += sliceWidth
+  }
+  var num = Math.round(0xffffff * Math.random())
+  var r = num >> 16
+  var g = num >> 8 & 255
+  var b = num & 255
+
+  canvasCtx.lineTo(canvas.width, canvas.height / 2)
+  canvasCtx.strokeStyle = 'rgb(' + r + ', ' + g + ', ' + b + ')'
+  canvasCtx.stroke()
+};
+
+draw()
+
+const newPalette = document.getElementById('colorPalette').value
+const convertPalette = Array.from(newPalette)
+convertPalette.forEach((color) => {
+  color.addEventListener('click', function triggerHandler () {
+    // var number = Math.round(0xffffff * Math.random())
+    // var r2 = number >> 16
+    // var g2 = number >> 8 & 255
+    // var b2 = number & 255
+    // color.style.color = 'rgb(' + r2 + ', ' + g2 + ', ' + b2 + ')'
+    canvasCtx.strokeStyle = color.style.color
+  })
+})
+
+// var p1 = Math.floor(Math.random() * 100) + 1;
+// var p2 = Math.floor(Math.random()* 101) + 200
+// var p3 = Math.floor(Math.random()* 201 + 256
+
+// for (analyser.amountOfDecibels === 5000) {
+// if (analyser.amountOfDecibels < 300) {
+// canvasCtx.strokeStyle = `rgb(${p1}, ${p1}, ${p1})`
+// }
+// if (analyser.amountOfDecibels > 300 && < 3000 ) {
+// canvasCtx.strokeStyle = `rgb(${p2}, ${p1}, ${p3})`
+// }
+// if (analyser.amountOfDecibels > 3000 && < 8000 ) {
+// canvasCtx.strokeStyle = `rgb(${p3}, ${p1}, ${p2})`
+// }
