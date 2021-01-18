@@ -89,14 +89,30 @@ convertPalette.forEach((color) => {
   })
 })
 
+const colorBoxes = document.getElementById('colorBlockContainer')
+const hueManipulation = document.getElementById('colorPalette')
+hueManipulation.getElementsByTagName('value')
 
+// console.log(inputData);
+
+colorBoxes.addEventListener('mouseout', () => {
+  colorBoxes.style.backgroundColor = canvasCtx.strokeStyle
+})
+
+colorBoxes.addEventListener('mouseleave', () => {
+  colorBoxes.style.backgroundColor = canvasCtx.strokeStyle
+})
+
+colorBoxes.getElementsByTagName('div')
+colorBoxes.addEventListener('click', () => {
+  colorBoxes.style.color = canvasCtx.strokeStyle
+})
 var flashElement = function (elem) {
   elem.style.backgroundColor = 'red'
   setTimeout(function () {
     elem.style.backgroundColor = 'black'
   })
 }
-
 document.getElementById('audioButton').addEventListener('click', () => {
   document.getElementById('audioButton').style.backgroundColor = 'darkgreen'
   audioCtx.close()
@@ -104,26 +120,16 @@ document.getElementById('audioButton').addEventListener('click', () => {
 
 document.getElementById('addPaletteColor').addEventListener('click', () => {
   flashElement(document.getElementById('addPaletteColor')) // feedback of click
-  var div = document.createElement('div')
+  const div = document.createElement('div')
   div.innerHTML = '<input type=\'color\' class=\'paletteBlock\'>'
   document.getElementById('colorPalette').appendChild(div) // works without altering the colors
   // document.getElementById('colorPalette').innerHTML += `<div><input type='color' class='paletteBlock'></div>`; //messes up chosen colors for some reason
-})
 
-document.getElementById('removePaletteColor').addEventListener('click', () => {
-  flashElement(document.getElementById('removePaletteColor')) // feedback of click
+  document.getElementById('removePaletteColor').addEventListener('click', () => {
+    flashElement(document.getElementById('removePaletteColor')) // feedback of click
+    document.getElementById('colorPalette').removeChild(div)
 
-  const paletteBoxes = document.getElementById('colorPalette').getElementsByTagName('input')
-  if (paletteBoxes.length > 1) paletteBoxes[paletteBoxes.length - 1].remove()
-})
-
-// make HTMLCollection arrays
-const colorBoxes = document.getElementById('colorBlockContainer')
-colorBoxes.getElementsByTagName('style')
-
-const button = document.createElement('button')
-colorBoxes.appendChild(button)
-colorBoxes.addEventListener('mouseover', () => {
-  colorBoxes.style.color = canvasCtx.strokeStyle
+    if (hueManipulation.length > 1) hueManipulation[hueManipulation.length - 1].remove()
+  })
 })
 
