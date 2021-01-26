@@ -2,14 +2,38 @@
 <html lang = "en">
 <head>
 <meta name = "viewport" content="width=device-width initial-scale = "1.0 http equiv = "refresh" content = "10000">
-<link rel = "stylesheet"  type = "text/css" href = "Style.css">
-<link href='https://fonts.googleapis.com/css?family=Faster One' rel='stylesheet'>
+<title>NLED Audio Reaction Test</title>
+<link rel="stylesheet" href="Palettes.css">
 </head>
-
 <body>
+    <div id="container">
 
-<canvas id = "vvisualizer"></canvas>
+      <canvas id="canvasContainer" width="800" height="400" title="canvas for drawing wave form"></canvas>
+      <div id="colorBlockContainer" title="output boxes for generated color values">
+        <div class='colorblock'>1</div>
+        <div class='colorblock'></div>
+        <div class='colorblock'>3</div>
+        <div class='colorblock'></div>
+        <div class='colorblock'>5</div>
+        <div class='colorblock'></div>
+        <div class='colorblock'>7</div>
+        <div class='colorblock'></div>
+      </div>
 
-<script src = "AudioVis.js"></script>
+      <div id="colorPaletteContainer">
+        <div><div  id="removePaletteColor" class='paletteBlock'  title="remove palette color">-</div></div>
+        <div id="colorPalette">
+          <div><input type="color" class='paletteBlock' value="#ff6465" title="palette color #1"></div>
+          <div><input type="color" class='paletteBlock' value="#009365" title="palette color #2"></div>
+          <div><input type="color" class='paletteBlock'  value="#ff0065" title="palette color #3"></div>
+        </div>
+        <div><div id="addPaletteColor" class='paletteBlock' title="add palette color">+</div></div>
+      </div>
+
+      <button id="audioButton" title="Click to Activate Microphone">&#127908;</button>
+      <div>Created by Jeff Nygaard of NLED. Copyright 2021 www.NLEDshop.com</div>
+    </div>    
+    <script type="text/javascript" src="Microphone.js"></script>
+
 </body>
 </html>
