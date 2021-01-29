@@ -239,3 +239,19 @@ function handlers () {
 // -------------------------------------------------------------------------
 // function rgbToHex(r, g, b) {
 // return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)
+// switch (audioCtx.state) {
+//   case 1:
+//   if (audioCtx.resume() === true) {
+//    for (i = 0; i < colorBoxes.length - 1; i++) {
+//      colorBoxes[i].style.backgroundColor = `rgb(${R}, ${G}, ${B})`
+//      canvasCtx.strokeStyle.rotate(66)        // Basically you can sync any color change with
+//    }
+//  }
+//  case 2:
+//    if (audioCtx.suspend() === true) {
+//      for (v = 0; v < colorBoxes.length - 1; v++) {
+//    colorBoxes[v].style.backgroundColor = `rgb(${192}, ${192}, ${192})`
+//    }
+//  }
+//  break
+// }
